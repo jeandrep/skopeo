@@ -1,19 +1,12 @@
-FROM jenkins/inbound-agent:alpine as jnlp
+FROM openshift/jenkins-slave-base-centos7
 
-FROM openshift/jenkins-slave-base-centos7:latest
+MAINTAINER Jeandre Palm <4304398+jeandrep@users.noreply.github.com>
 
 USER root
 
-RUN yum repolist > /dev/null && \
+RUN yum -y install skopeo && \
+    yum update -y && \
     yum clean all && \
-    INSTALL_PKGS="skopeo" && \
-    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum clean all
+    rm -rf /var/cache/yum
 
 USER 1001
-
-COPY --from=jnlp /usr/local/bin/jenkins-agent /usr/local/bin/jenkins-agent
-COPY --from=jnlp /usr/share/jenkins/agent.jar /usr/share/jenkins/agent.jar
-
-ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
