@@ -15,7 +15,7 @@ RUN apk add --no-cache \
 
 WORKDIR /go/src/github.com/containers/skopeo
 RUN git clone https://github.com/containers/skopeo.git .
-RUN make binary-local-static CGO_ENABLED=0
+RUN make binary CGO_ENABLED=0 DISABLE_CGO=1
 
 
 FROM alpine:3.7
