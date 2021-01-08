@@ -9,12 +9,13 @@ RUN apk add --no-cache \
     musl-dev \
     btrfs-progs-dev \
     lvm2-dev \
+    libc6-compat \
     gpgme-dev \
     glib-dev || apk update && apk upgrade
 
 WORKDIR /go/src/github.com/containers/skopeo
 RUN git clone https://github.com/containers/skopeo.git .
-RUN make binary-local-static DISABLE_CGO=1
+RUN make binary-local-static CGO_ENABLED=0
 
 
 FROM alpine:3.7
